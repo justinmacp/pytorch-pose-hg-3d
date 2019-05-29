@@ -15,9 +15,7 @@ def show_2d(img, points, c, edges):
                     (points[e[1], 0], points[e[1], 1]), c, 2)
   return img
 
-mpii_edges = [[0, 1], [1, 2], [2, 6], [6, 3], [3, 4], [4, 5], 
-              [10, 11], [11, 12], [12, 8], [8, 13], [13, 14], [14, 15], 
-              [6, 8], [8, 9]]
+mpii_edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[2,8],[3,9],[8,9],[6,7],[7,8],[9,10],[10,11],[8,12],[9,12],[12,13],[13,14],[14,15]]#,[14,16],[13,17],[13,18]]
 
 class Debugger(object):
   def __init__(self, ipynb=False, edges=mpii_edges):
@@ -55,7 +53,7 @@ class Debugger(object):
       c = [(z[j] + 0.5, y[j] + 0.5, x[j] + 0.5) for j in range(points.shape[0])]
     self.ax.scatter(x, y, z, s = 200, c = c, marker = marker)
     for e in edges:
-      self.ax.plot(x[e], y[e], z[e], c = c)
+      self.ax.plot(x[e], y[e], z[e], c = c, markersize=0.1)
     
   def show_3d(self):
     max_range = np.array([self.xmax-self.xmin, self.ymax-self.ymin, self.zmax-self.zmin]).max()
@@ -63,7 +61,7 @@ class Debugger(object):
     Yb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][1].flatten() + 0.5*(self.ymax+self.ymin)
     Zb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][2].flatten() + 0.5*(self.zmax+self.zmin)
     for xb, yb, zb in zip(Xb, Yb, Zb):
-      self.ax.plot([xb], [yb], [zb], 'w')
+      self.ax.plot([xb], [yb], [zb], 'w', markersize=0.1)
     self.plt.show()
     
   def add_img(self, img, imgId = 'default'):
@@ -107,7 +105,8 @@ class Debugger(object):
     Yb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][1].flatten() + 0.5*(self.ymax+self.ymin)
     Zb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][2].flatten() + 0.5*(self.zmax+self.zmin)
     for xb, yb, zb in zip(Xb, Yb, Zb):
-      self.ax.plot([xb], [yb], [zb], 'w')
+      self.ax.plot([xb], [yb], [zb], 'w', markersize=0.1)
+    self.plt.pause(0.0001)
     self.plt.savefig(path, bbox_inches='tight', frameon = False)
   
   def save_img(self, imgId = 'default', path = '../debug/'):
