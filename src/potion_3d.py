@@ -79,7 +79,7 @@ def heatmap_colorization_aggregation(file_name,coords):                         
 def main():
     ls = os.listdir(coordinate_dir)                                             #list all files in the coordinate directory
     print("Creating 3D heatmaps")
-    hm_col_full = []                                                            #instantiate empty list of heatmaps
+    #hm_col_full = []                                                            #instantiate empty list of heatmaps
     for file_name in sorted(ls):                                                #iterate through all npy files in the directory
         print(file_name)
         if is_pickle(file_name):                                                #read only .npy files
@@ -96,17 +96,19 @@ def main():
                 hm_d_full.append(hm_d)                                          #append the dilated heatmap to the array of heatmaps
             hm_d_full=np.asarray(hm_d_full)                                     #convert the list of dilated heatmaps into a numpy array
             heatmap_col = heatmap_colorization_aggregation(file_name,hm_d_full) #colorize and temporally aggregate the heatmaps from the list
-            hm_col_full.append(heatmap_col)                                     #append the colorized heatmap to an array to be later saved to a file
-    hm_col_full=np.asarray(hm_col_full)                                         #convert the array of colorized heatmaps into a numpy array, in order to be saved to a file
-    num_samples_all = 2326                                                      #define the number of samples in order to do the train-test split
-    val_split = int(0.25 * num_samples_all)                                     #use a quarter of the data for validation
-    val_ind = np.random.choice(num_samples_all, val_split)                      #take some random samples for the validation split
-    all_ind = np.arange(0,num_samples_all)                                      #create list of all indices
-    train_ind = np.setdiff1d(all_ind, val_ind)                                  #take all indices not in the validation split and put it in the training set
-    train_data= hm_col_full[train_ind]                                          #take the train data according to the indices
-    val_data= hm_col_full[val_ind]                                              #take the validation data according to the indices
+            np.savez(os.path.join(heatmap_dir,get_filename(file_name),heatmap_col)
+            #hm_col_full.append(heatmap_col)                                     #append the colorized heatmap to an array to be later saved to a file
+    #hm_col_full=np.asarray(hm_col_full)                                         #convert the array of colorized heatmaps into a numpy array, in order to be saved to a file
+    #num_samples_all = 2326                                                      #define the number of samples in order to do the train-test split
+    #val_split = int(0.25 * num_samples_all)                                     #use a quarter of the data for validation
+    #val_ind = np.random.choice(num_samples_all, val_split)                      #take some random samples for the validation split
+    #all_ind = np.arange(0,num_samples_all)                                      #create list of all indices
+    #train_ind = np.setdiff1d(all_ind, val_ind)                                  #take all indices not in the validation split and put it in the training set
+    #train_data= hm_col_full[train_ind]                                          #take the train data according to the indices
+    #val_data= hm_col_full[val_ind]                                              #take the validation data according to the indices
 
-    with h5py.File("/cluster/scratch/himeva/train_data.h5") as f:                       #write the set of all heatmaps into an h5 file
+'''
+    with h5py.File("/cluster/scratch/majustin/train_data.h5") as f:                       #write the set of all heatmaps into an h5 file
         dst = f.create_dataset("train_data", shape=(train_data.shape[0],64,64,64,64),   #create a dataset datatype from the numpy array
                         dtype=float)
         for frame in range(train_data.shape[0]):                                        #for each video
@@ -115,6 +117,7 @@ def main():
                         dtype=float)
         for frame in range(train_data.shape[0]):                                        #for each video
             dst[frame] = train_data[frame]                                              #add the colorized heatmap into the dataset
+'''
 
 if __name__ == '__main__':
     main()
