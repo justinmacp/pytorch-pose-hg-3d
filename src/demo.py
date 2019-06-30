@@ -84,8 +84,8 @@ def main(opt):
         result_array = np.append(result_array, [pred], axis=0)
 
     #result_array = result_array-avgarr
-    print(os.path.join('penn_coords', path_dec[-1] + '.npy'))
-    np.save(os.path.join('penn_coords', path_dec[-1] + '.npy'), result_array)    #saves 3D coordinates of the 16 joints that are extracted from the image
+    print(os.path.join('coords_pavlakos', path_dec[-1] + '.npy'))
+    np.save(os.path.join('coords_pavlakos', path_dec[-1] + '.npy'), result_array)    #saves 3D coordinates of the 16 joints that are extracted from the image
   elif is_image(opt.demo):
     print('Running {} ...'.format(opt.demo))
     image = cv2.imread(opt.demo)

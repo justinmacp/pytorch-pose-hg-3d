@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import mpl_toolkits.mplot3d
 from mpl_toolkits.mplot3d import Axes3D
+import os
   
 def show_2d(img, points, c, edges):
   num_joints = points.shape[0]
@@ -16,13 +17,14 @@ def show_2d(img, points, c, edges):
   return img
 
 mpii_edges = [[0,1],[1,2],[2,3],[3,4],[4,5],[2,8],[3,9],[8,9],[6,7],[7,8],[9,10],[10,11],[8,12],[9,12],[12,13],[13,14],[14,15]]#,[14,16],[13,17],[13,18]]
+#mpii_edges = [[0, 1], [1, 2], [2, 6], [6, 3], [3, 4], [4, 5], [10, 11], [11, 12], [12, 8], [8, 13], [13, 14], [14, 15], [6, 8], [8, 9]]
 
 class Debugger(object):
   def __init__(self, ipynb=False, edges=mpii_edges):
     self.ipynb = ipynb
     if not self.ipynb:
       self.plt = plt
-      self.fig = self.plt.figure()
+      self.fig = self.plt.figure(figsize=(20,10))
       self.ax = self.fig.add_subplot((111),projection='3d')
       self.ax.grid(False)
     oo = 1e10
@@ -99,7 +101,7 @@ class Debugger(object):
           plt.imshow(v)
       plt.show()
   
-  def save_3d(self, path):
+  def save_3d(self, path, count):
     max_range = np.array([self.xmax-self.xmin, self.ymax-self.ymin, self.zmax-self.zmin]).max()
     Xb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][0].flatten() + 0.5*(self.xmax+self.xmin)
     Yb = 0.5*max_range*np.mgrid[-1:2:2,-1:2:2,-1:2:2][1].flatten() + 0.5*(self.ymax+self.ymin)
@@ -107,7 +109,7 @@ class Debugger(object):
     for xb, yb, zb in zip(Xb, Yb, Zb):
       self.ax.plot([xb], [yb], [zb], 'w', markersize=0.1)
     self.plt.pause(0.0001)
-    self.plt.savefig(path, bbox_inches='tight', frameon = False)
+    self.plt.savefig(os.path.join(path,str(count)), bbox_inches='tight', frameon = False)
   
   def save_img(self, imgId = 'default', path = '../debug/'):
     cv2.imwrite(path + '{}.png'.format(imgId), self.imgs[imgId])
